@@ -35,7 +35,7 @@ getGif: function(searchingText, callback) { // 1.
             const request = new XMLHttpRequest();
             request.onload = function() {
                 if (this.status === 200) { //this? czy request?
-                    var data = JSON.parse(xhr.responseText).data; // // W obiekcie odpowiedzi mamy obiekt z danymi. W tym miejscu rozpakowujemy je sobie do zmiennej data, aby nie pisać za każdym razem response.data.
+                    var data = JSON.parse(request.responseText).data; // // W obiekcie odpowiedzi mamy obiekt z danymi. W tym miejscu rozpakowujemy je sobie do zmiennej data, aby nie pisać za każdym razem response.data.
                     var gif = {  // Układamy obiekt gif na podstawie tego, co otrzymaliśmy z serwera
                     url: data.fixed_width_downsampled_url,
                     sourceUrl: data.url
