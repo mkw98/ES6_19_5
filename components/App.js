@@ -30,20 +30,44 @@ getGif: function(searchingText, callback) { // 1.
     var GIPHY_API_URL = "https://api.giphy.com";
 
     var url = GIPHY_API_URL + '/v1/gifs/random?api_key=' + GIPHY_PUB_KEY + '&tag=' + searchingText;  // Konstruujemy adres URL dla API Giphy
-    var xhr = new XMLHttpRequest();  // 3.
-    xhr.open('GET', url);
-    xhr.onload = function() {
-        if (xhr.status === 200) {
-           var data = JSON.parse(xhr.responseText).data; // W obiekcie odpowiedzi mamy obiekt z danymi. W tym miejscu rozpakowujemy je sobie do zmiennej data, aby nie pisać za każdym razem response.data.
-            var gif = {  // Układamy obiekt gif na podstawie tego, co otrzymaliśmy z serwera
-                url: data.fixed_width_downsampled_url,
-                sourceUrl: data.url
+     return new Promise(
+       function(resolve, reject) {
+            const request = new XMLHttpRequest();
+            request.onload = function() {
+                if (this.status === 200) { //this? czy request?
+                    var data = JSON.parse(xhr.responseText).data; // // W obiekcie odpowiedzi mamy obiekt z danymi. W tym miejscu rozpakowujemy je sobie do zmiennej data, aby nie pisać za każdym razem response.data.
+                    var gif = {  // Układamy obiekt gif na podstawie tego, co otrzymaliśmy z serwera
+                    url: data.fixed_width_downsampled_url,
+                    sourceUrl: data.url
+                    };
+                    resolve(gif); // spelnienie obietnicy - zamiast callback
+                } else {
+                    reject(new Error(this.statusText)); // obietnica "nie została spełniona" - błąd
+                }
             };
-            callback(gif);  // Przekazujemy obiekt do funkcji callback, którą przekazaliśmy jako drugi parametr metody getGif
-        }
-    };
-    xhr.send();
+            request.onerror = function() {
+                reject(new Error(
+                   `XMLHttpRequest Error: ${this.statusText}`));
+            };
+          request.open('GET', url);
+            request.send();
+        });
 },
+//poprzedni kod:
+//var xhr = new XMLHttpRequest();  // 3.
+    //xhr.open('GET', url);
+    //xhr.onload = function() {
+    //    if (xhr.status === 200) {
+    //       var data = JSON.parse(xhr.responseText).data; // W obiekcie odpowiedzi mamy obiekt z danymi. W tym miejscu rozpakowujemy je sobie do zmiennej data, aby nie pisać za każdym razem response.data.
+     //       var gif = {  // Układamy obiekt gif na podstawie tego, co otrzymaliśmy z serwera
+     //           url: data.fixed_width_downsampled_url,
+     //           sourceUrl: data.url
+     //       };
+     //       callback(gif);  // Przekazujemy obiekt do funkcji callback, którą przekazaliśmy jako drugi parametr metody getGif
+     //   }
+    //};
+    //xhr.send();
+//},
             render: function() {
 
             var styles = {
