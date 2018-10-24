@@ -11,19 +11,33 @@ App = React.createClass({
                 gif: {}
         };
     },
-       handleSearch: function(searchingText) {  // 1.
-    this.setState({
-      loading: true  // 2.
-    });
-    this.getGif(searchingText, function(gif) {  // 3.
-      this.setState({  // 4
-        loading: false,  // a
-        gif: gif,  // b
-        searchingText: searchingText  // c
-      });
-    }.bind(this));
-  },
+ //poprzedni kod
+ //      handleSearch: function(searchingText) {  // 1.
+ //   this.setState({
+ //     loading: true  // 2.
+ //   });
+ //   this.getGif(searchingText, function(gif) {  // 3.
+ //     this.setState({  // 4
+ //       loading: false,  // a
+ //       gif: gif,  // b
+ //       searchingText: searchingText  // c
+ //     });
+ //   }.bind(this));
+ // },
 
+    handleSearch: function(searchingText) { // 1.
+        this.setState({
+            loading: true // 2.
+        });
+        this.getGif(searchingText).then(gif => { 
+            this.setState({ 
+                loading: false, 
+                gif: gif, 
+                searchingText: searchingText 
+            });
+        })
+        .catch(error => console.log('Error!', error));
+    },
 
 getGif: function(searchingText, callback) { // 1.
     var GIPHY_PUB_KEY = 'vYDHC2Ex4rf6H5D4DGUmOukTGEXa95h5';  //czy te klucze tutaj?
